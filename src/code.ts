@@ -1,13 +1,23 @@
-import { Observable } from "rxjs/Observable";
-import { fromEvent  } from 'rxjs/Observable/fromEvent'
+import { Subject } from "rxjs/Subject";
 
-var observable = fromEvent(document, 'mousemove')
+var subject = new Subject();
 
-setTimeout(() => {
-    var subscriptions = observable.subscribe(
-        (x:any) => addItem(x)
-    )
-}, 2000);
+subject.subscribe(
+    (data:any) => addItem("observer 1: "+data),
+    (error:any) => addItem(error),
+    () => addItem("observer one completed !"),
+)
+subject.next("the first thing has been sent")
+
+var observer2 = subject.subscribe(
+    (data:any) => addItem("observer 2: "+data)
+)
+
+subject.next("the second thing has been sent")
+subject.next("the third thing has been sent")
+
+observer2.unsubscribe()
+subject.next("the final thing has been sent")
 
 function addItem(val:any) {
     var node = document.createElement("li");
