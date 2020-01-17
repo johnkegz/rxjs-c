@@ -1,10 +1,9 @@
-import { ReplaySubject } from "rxjs/ReplaySubject";
+import { AsyncSubject } from "rxjs/AsyncSubject";
 
-var subject = new ReplaySubject(30, 500);
+var subject = new AsyncSubject();
 
 subject.subscribe(
     (data:any) => addItem("observer 1: "+data),
-    (error:any) => addItem(error),
     () => addItem("observer one completed !"),
 )
 
@@ -15,6 +14,7 @@ setTimeout(()=>{
     var observer2 = subject.subscribe(
         (data:any) => addItem("observer 2: "+data)
     )
+    subject.complete()
 }, 500)
 
 function addItem(val:any) {
